@@ -1,4 +1,4 @@
-// Generated from c:/Users/T-GAMER/OneDrive/Área de Trabalho/SimpleParser/UFABCLang.g4 by ANTLR 4.13.1
+// Generated from c:/Users/T-GAMER/OneDrive/Área de Trabalho/UFABCLang/UFABCLang.g4 by ANTLR 4.13.1
 
 	import java.util.ArrayList;
 	import java.util.HashMap;

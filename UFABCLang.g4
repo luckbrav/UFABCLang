@@ -51,15 +51,15 @@ declaravar	: 'declarar' { currentDecl.clear(); } tipoVar
 tipoVar			: 'inteiro' {currentType = Types.INTEIRO;}
 					| 'real' {currentType = Types.REAL;}
 					| 'texto' {currentType = Types.TEXTO;}
-			 		;
+			 	;
 
-comando  :  cmdAttrib
-			|  cmdLeitura
-			|  cmdEscrita
-         |  cmdSe
-         |  cmdEnquanto
-         |  cmdRealizeEnquanto
-			;					
+comando     :  cmdAttrib
+		    |  cmdLeitura
+	        |  cmdEscrita
+            |  cmdSe
+            |  cmdEnquanto
+            |  cmdRealizeEnquanto
+            ;					
 			
 cmdAttrib   : ID { if (!isDeclared(_input.LT(-1).getText())) {
                        throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
