@@ -1,4 +1,4 @@
-programa 
+programa testeInput
 
 declarar inteiro a, b, d;
 declarar real c;
@@ -21,7 +21,7 @@ se (b > 10) entao {
 	escreva(b);
 } senao {
 	escreva("cu");
-}
+} fimse
 
 realize
 {

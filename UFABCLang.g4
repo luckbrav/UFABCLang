@@ -2,9 +2,11 @@ grammar UFABCLang;
 
 @header {
 	import java.util.ArrayList;
+    import java.util.Stack;
 	import java.util.HashMap;
 	import io.compiler.types.*;
 	import io.compiler.core.exceptions.*;
+    import io.compiler.core.ast.*;
 }
 
 @members {
@@ -12,6 +14,11 @@ grammar UFABCLang;
     private ArrayList<Var> currentDecl = new ArrayList<Var>();
     private Types currentType;
     private Types leftType=null, rightType=null;
+    private Program program = new Program();
+    private String strExpr = "";
+    private IfCommand currentIfCommand;
+
+    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
     
     public void updateType(){
     	for(Var v: currentDecl){
@@ -24,18 +31,29 @@ grammar UFABCLang;
         	System.out.println(symbolTable.get(id));
         }
     }
+
+    public Program getProgram(){
+    return this.program;
+    }
     
     public boolean isDeclared(String id){
     	return symbolTable.get(id) != null;
     }
 }
 
-programa	: 'programa' 
+programa	: 'programa' ID { program.setName(_input.LT(-1).getText());
+                               stack.push(new ArrayList<Command>()); 
+                            }
                declaravar+
                'inicio'
                comando+
                'fim'
                'fimprog'
+
+               {
+                  program.setSymbolTable(symbolTable);
+                  program.setCommandList(stack.pop());
+               }
 			;
 						
 declaravar	: 'declarar' { currentDecl.clear(); } tipoVar  
@@ -49,8 +67,8 @@ declaravar	: 'declarar' { currentDecl.clear(); } tipoVar
 			;
 
 tipoVar			: 'inteiro' {currentType = Types.INTEIRO;}
-					| 'real' {currentType = Types.REAL;}
-					| 'texto' {currentType = Types.TEXTO;}
+				| 'real' {currentType = Types.REAL;}
+				| 'texto' {currentType = Types.TEXTO;}
 			 	;
 
 comando     :  cmdAttrib
@@ -90,23 +108,49 @@ cmdLeitura  : 'leia' AP
                PV 
 			;
 			
-cmdEscrita  : 'escreva' AP ( termo ) FP PV { rightType = null;}
-			;			
+cmdEscrita  : 'escreva' AP 
+              ( termo  { Command cmdWrite = new WriteCommand(_input.LT(-1).getText());
+                         stack.peek().add(cmdWrite);
+                       } 
+              ) 
+              FP PV { rightType = null;}
+			;				
 
-cmdSe				: 'se' AP expr OP_REL expr FP 'entao' 
-                           AC (comando)+ FC 
-						('senao' AC (comando)+ FC)?
-					;
+cmdSe			:   'se' { stack.push(new ArrayList<Command>());
+                             strExpr = "";
+                             currentIfCommand = new IfCommand();
+                        }  
+                    AP 
+                    expr 
+                    OP_REL { strExpr += _input.LT(-1).getText(); }
+                    expr 
+                    FP { currentIfCommand.setExpression(strExpr); }
+                    'entao' 
+                    AC 
+                    (comando)+ {currentIfCommand.setTrueList(stack.pop());}  
+                    FC 
+                    ( 'senao'  
+                        { stack.push(new ArrayList<Command>()); }
+                        comando+
+                        {
+                        currentIfCommand.setFalseList(stack.pop());
+                        }  
+                    )? 
+                    'fimse' 
+                    {
+                        stack.peek().add(currentIfCommand);
+                    }  			   
+                ;
 
 cmdEnquanto		: 'enquanto' AP expr OP_REL expr FP
 						AC (comando)+ FC
-					;
+				;
 
 cmdRealizeEnquanto  : 'realize' AC (comando)+ FC
                       'enquanto' AP expr OP_REL expr FP PV
                     ; 
 
-expr		:  termo exprl 			
+expr		:  termo  { strExpr += _input.LT(-1).getText(); } exprl 			
 			;
 			
 termo		: ID  { if (!isDeclared(_input.LT(-1).getText())) {
@@ -167,8 +211,10 @@ termo		: ID  { if (!isDeclared(_input.LT(-1).getText())) {
                   }  
 			;
 			
-exprl		: ( OP termo ) *
-			;	
+exprl		: ( OP { strExpr += _input.LT(-1).getText(); } 
+                termo { strExpr += _input.LT(-1).getText(); } 
+              ) *
+			;		
 			
 OP			: '+' | '-' | '*' | '/' 
 			;	
@@ -176,7 +222,7 @@ OP			: '+' | '-' | '*' | '/'
 OP_AT	    : '='
 		    ;			
 
-OP_REL 	: '<' | '>' | '<=' | '>=' | '!=' | '==' 
+OP_REL 	    : '<' | '>' | '<=' | '>=' | '!=' | '==' 
 			;
 
 ID			: [a-z] ( [a-z] | [A-Z] | [0-9] )*		
