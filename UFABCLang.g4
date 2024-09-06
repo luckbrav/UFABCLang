@@ -52,7 +52,7 @@ grammar UFABCLang;
 		Variavel variavelAtual = (Variavel) tabelaSimbolos.get(nomeVar);
 
         if (!variavelAtual.isInitialized()) {
-			throw new SemanticException("Variavel '" + nomeVar + "' might not have been initialized");
+			throw new SemanticException("Variavel '" + nomeVar + "' pode não ter sido inicializada");
         }
 	}
 

@@ -1,8 +1,7 @@
 import java.util.Scanner;
-import java.util.*; 
 public class meuPrograma { 
 	public static void main(String args[]) {
-		Scanner _sc = new Scanner(System.in);
+		Scanner sc = new Scanner(System.in);
 		int a;
 		int b;
 		String x;
@@ -10,10 +9,11 @@ public class meuPrograma {
 		a = 0;
 		b = 2;
 		x = "ola";
-		System.out.println("Hello World");
-		System.out.println("Fim do programa");
-		a = _sc.nextInt(); _sc.nextLine();
-		b = _sc.nextInt(); _sc.nextLine();
+		y = "tchau";
+		System.out.println(x);
+		System.out.println(y);
+		a = sc.nextInt(); sc.nextLine();
+		b = sc.nextInt(); sc.nextLine();
 		System.out.println(a);
 		if (a>5) {System.out.println("maior que 5");a = a+1;}else {System.out.println("menor que 5");}
 		do {

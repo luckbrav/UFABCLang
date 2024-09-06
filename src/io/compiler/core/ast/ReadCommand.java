@@ -33,9 +33,9 @@ public class ReadCommand implements Command {
         sb.append(var.getName()).append(" = ");
 
         switch (var.getType()) {
-            case Variavel.INTEIRO -> sb.append("_sc.nextInt(); _sc.nextLine();");
-            case Variavel.REAL  -> sb.append("_sc.nextDouble(); _sc.nextLine();");
-            case Variavel.TEXTO  -> sb.append("_sc.nextLine();");
+            case Variavel.INTEIRO -> sb.append("sc.nextInt(); sc.nextLine();");
+            case Variavel.REAL  -> sb.append("sc.nextDouble(); sc.nextLine();");
+            case Variavel.TEXTO  -> sb.append("sc.nextLine();");
         }
 
 
