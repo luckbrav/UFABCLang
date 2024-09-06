@@ -20,7 +20,7 @@ escreva(a);
 se (b > 10) entao {
 	escreva(b);
 } senao {
-	escreva("cu");
+	escreva("Entrou no Senao!");
 } fimse
 
 realize
@@ -36,8 +36,8 @@ escreva(b);
 c = 1.5;
 
 enquanto (c <= 66.6) {
-	escreva("legal");
-	
+	escreva("C é maior que 66.6");
+	escreva("Somando 3 ao c");
 	c = c + 3.14;
 }
 
