@@ -2,21 +2,19 @@ package io.compiler.core.ast;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
-import io.compiler.types.Types;
-import io.compiler.types.Var;
+import io.compiler.estruturas.TabelaSimbolos;
 
 public class Program {
     private String name;
-    private HashMap<String, Var> symbolTable;
+    private TabelaSimbolos symbolTable;
     private List<Command> commandList;
     
     public Program() {
         super();
     }
-    public Program(String name, HashMap<String, Var> symbolTable, List<Command> commandList) {
+    public Program(String name, TabelaSimbolos symbolTable, List<Command> commandList) {
         this.name = name;
         this.symbolTable = symbolTable;
         this.commandList = commandList;
@@ -27,10 +25,10 @@ public class Program {
     public void setName(String name) {
         this.name = name;
     }
-    public HashMap<String, Var> getSymbolTable() {
+    public TabelaSimbolos getSymbolTable() {
         return symbolTable;
     }
-    public void setSymbolTable(HashMap<String, Var> symbolTable) {
+    public void setSymbolTable(TabelaSimbolos symbolTable) {
         this.symbolTable = symbolTable;
     }
     public List<Command> getCommandList() {
@@ -58,32 +56,30 @@ public class Program {
         }
     }
 
-	public String generateJavaFile() {
-		StringBuilder str = new StringBuilder();
-		str.append("import java.util.Scanner;\n");
-        str.append("import java.util.*; \n");
-		str.append("public class "+name+"{ \n");
-		str.append("   public static void main(String args[]){ \n");
-		str.append("   Scanner _scTrx = new Scanner(System.in);\n");
-		for (String varId: symbolTable.keySet()) {
-			Var var = symbolTable.get(varId);
-			if (var.getType() == Types.INTEIRO) {
-				str.append("    int ");
-			} else if (var.getType() == Types.REAL) {
-				str.append("    int ");
-			}
-			else {
-				str.append("    String ");				
-			}
-			str.append(var.getId()+";\n");
-		}
-		
-		for(Command cmd: commandList) {
-			str.append(cmd.generateTarget());
-		}
-		str.append("   }\n");
-		str.append("}");
-		return str.toString();
-	}
+    private String generateJavaFile()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("import java.util.Scanner;\n");
+        sb.append("public class ").append(name).append(" { \n");
+        sb.append("\tpublic static void main(String args[]) {\n");
+        sb.append("\t\tScanner sc = new Scanner(System.in);\n");
+
+        symbolTable.generateList().forEach(x -> sb
+                .append("\t\t")
+                .append(x.generateJavaDeclarationCode())
+                .append("\n"));
+
+        commandList.forEach(x -> sb
+                .append("\t\t")
+                .append(x.generateJavaCode())
+                .append("\n"));
+
+        sb.append("\n");
+        sb.append("\t}\n");
+        sb.append("}\n");
+
+        return sb.toString();
+    }
 	
 }

@@ -1,53 +1,45 @@
 package io.compiler.core.ast;
 
 // import io.compiler.types.Types;
-import io.compiler.types.Var;
+// import io.compiler.types.Var;
+import io.compiler.estruturas.Variavel;
 
-public class ReadCommand extends Command {
+public class ReadCommand implements Command {
 
-	private Var var;
+	private Variavel var;
 
 	public ReadCommand() {
 		super();
 	}
 
-	public ReadCommand(Var var) {
+	public ReadCommand(Variavel var) {
 		super();
 		this.var = var;
 	}
 
-	public Var getVar() {
+	public Variavel getVar() {
 		return var;
 	}
 
-	public void setVar(Var var) {
+	public void setVar(Variavel var) {
 		this.var = var;
 	}
 
-	@Override
-	// public String generateTarget() {
-	// 	
-	// 	return var.getId() + " = " + ((var.getType()==Types.INTEIRO)?"_scTrx.nextInt();":"_scTrx.nextLine();")+"\n";
-	// }
-    public String generateTarget() {
-        
-        String leitura;
-        
+    @Override
+    public String generateJavaCode()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(var.getName()).append(" = ");
+
         switch (var.getType()) {
-            case INTEIRO:
-                leitura = "_scTrx.nextInt();";
-                break;
-            case REAL:
-                leitura = "_scTrx.nextDouble();";
-                break;
-            case TEXTO:
-                leitura = "_scTrx.nextLine();";
-                break;
-            default:
-                leitura = "_scTrx.nextLine();"; // Valor padrão
+            case Variavel.INTEIRO -> sb.append("_sc.nextInt(); _sc.nextLine();");
+            case Variavel.REAL  -> sb.append("_sc.nextDouble(); _sc.nextLine();");
+            case Variavel.TEXTO  -> sb.append("_sc.nextLine();");
         }
-        
-        return var.getId() + " = " + leitura + "\n";
+
+
+        return sb.toString();
     }
 
 }

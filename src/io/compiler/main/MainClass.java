@@ -1,9 +1,9 @@
 package io.compiler.main;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
+// import java.io.File;
+// import java.io.FileWriter;
+// import java.io.PrintWriter;
+// import java.io.IOException;
 
 
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -11,48 +11,38 @@ import org.antlr.v4.runtime.CharStreams;
 
 import io.compiler.core.UFABCLangLexer;
 import io.compiler.core.UFABCLangParser;
-import io.compiler.core.ast.Program;
+// import io.compiler.core.ast.Program;
+import io.compiler.core.exceptions.SemanticException;
 
 public class MainClass {
 	public static void main(String[] args) {
-		try {
+		try
+		{
 			UFABCLangLexer lexer;
 			UFABCLangParser parser;
-			
-			// crio o analisador léxico a partir da leitura de um arquivo
+			CommonTokenStream commonTokenStream;
+
 			lexer = new UFABCLangLexer(CharStreams.fromFileName("program.in"));
-			
-			// agora a partir do analisador lexico, obtenho um fluxo de tokens
-			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-			
-			// crio o parser a partir do tokenStream
-			parser = new UFABCLangParser(tokenStream);
-			
-			
-			// agora eu quero chamar do meu jeito
-			System.out.println("UFABC Compiler");
+			commonTokenStream = new CommonTokenStream(lexer);
+			parser = new UFABCLangParser(commonTokenStream);
+
+			System.out.println("Compilação começou....");
+
 			parser.programa();
-			System.out.println("Compilation Successfully - Good Job");
-			// parser.exibirVar();
 
-			Program program = parser.getProgram();
-
-			System.out.println(program.generateJavaFile());
-
-			try {
-				File f = new File (program.getName()+".java");
-				FileWriter fr = new FileWriter(f);
-				PrintWriter pr = new PrintWriter(fr);
-				pr.println(program.generateJavaFile());
-				pr.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
-		catch(Exception ex) {
-			System.err.println("Error: "+ex.getMessage());
-			//ex.printStackTrace();
+			System.out.println("Compilação bem sucedida");
+		} catch (SemanticException e)
+		{
+			System.err.println("Erro semântico: " + e.getMessage());
+		} catch (Exception e)
+		{
+			System.err.println("Erro genérico: " + e.getMessage());
 		}
 	}
+
+	public static Object run()
+	{
+		return null;
+	}
+	
 }

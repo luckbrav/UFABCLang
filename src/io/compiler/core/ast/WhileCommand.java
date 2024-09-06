@@ -2,11 +2,18 @@ package io.compiler.core.ast;
 
 import java.util.List;
 
-public class WhileCommand extends Command {
+public class WhileCommand implements Command {
 
     private String expression;
     private List<Command> commandList;
 
+    public WhileCommand() {
+        super();
+    }
+    public WhileCommand(String expression, List<Command> commandList) {
+        this.expression = expression;
+        this.commandList = commandList;
+    }
     public String getExpression() {
         return expression;
     }
@@ -21,13 +28,13 @@ public class WhileCommand extends Command {
     }
 
     @Override
-    public String generateTarget()
+    public String generateJavaCode()
     {
         StringBuilder sb = new StringBuilder();
 
         sb.append("while (").append(expression).append(") {").append("\n");
 
-        commandList.forEach(x -> sb.append(x.generateTarget()).append("\n"));
+        commandList.forEach(x -> sb.append(x.generateJavaCode()).append("\n"));
 
         sb.append("}").append("\n");
 

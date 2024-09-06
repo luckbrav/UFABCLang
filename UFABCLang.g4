@@ -14,44 +14,73 @@ grammar UFABCLang;
 	import java.util.Set;
 }
 
-@members {
-    private HashMap<String,Var> symbolTable = new HashMap<String, Var>();
+@members 
+{	
+	private int tipoVar;
+	private Integer tipoExprEsquerda, tipoExprDireita = null;
 
-    private ArrayList<Var> currentDecl = new ArrayList<Var>();
+	private String nomeVar, nomeVarExprEsquerda , strExpr;
 
-    private Types currentType;
+	private Simbolo simboloAtual;
+    private TabelaSimbolos tabelaSimbolos = new TabelaSimbolos();
 
-    private Types leftType=null, rightType=null;
+    private Variavel variavelAtual;
 
-    private String strExpr = "";
+    private IfCommand comandoSeAtual;
+    private DoWhileCommand comandoRealizeEnquantoAtual;
+    private WhileCommand comandoRealizeAtual;
 
-    private IfCommand currentIfCommand;
-    private DoWhileCommand currentDoWhileCommand;
-    private WhileCommand currentWhileCommand;
+    private Stack<List<Command>> stack = new Stack<>();
 
-    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
-    
     private Program program = new Program();
 
-    public void updateType(){
-    	for(Var v: currentDecl){
-    	   v.setType(currentType);
-    	   symbolTable.put(v.getId(), v);
-    	}
-    }
-    public void exibirVar(){
-        for (String id: symbolTable.keySet()){
-        	System.out.println(symbolTable.get(id));
-        }
-    }
+	public void adicionarSimbolo() {
+		if (tabelaSimbolos.exists(nomeVar)) {
+			throw new SemanticException("variavel '" + nomeVar + "' redeclarada");
+		}
+		
+		tabelaSimbolos.add(new Variavel(tipoVar, nomeVar, false, false));
+	}
+	
+	public void verificarIdentificador() {
+		if (!tabelaSimbolos.exists(nomeVar)) {
+			throw new SemanticException("Variavel '" + nomeVar + "' não declarada");
+		}
+	}
 
-    public Program getProgram(){
-    return this.program;
-    }
-    
-    public boolean isDeclared(String id){
-    	return symbolTable.get(id) != null;
-    }
+	public void checaSeInicializado() {
+		Variavel variavelAtual = (Variavel) tabelaSimbolos.get(nomeVar);
+
+        if (!variavelAtual.isInitialized()) {
+			throw new SemanticException("Variavel '" + nomeVar + "' might not have been initialized");
+        }
+	}
+
+	public void setAsUsed() {
+	    Variavel variavelAtual = (Variavel) tabelaSimbolos.get(nomeVar);
+		variavelAtual.setUsed(true);
+	}
+
+	public void checaListaNaoInicializada() {
+        List<String> listaNaoInicializada = tabelaSimbolos
+                                            .generateUninitializedList()
+                                            .stream()
+                                            .map(x -> x.getName())
+                                            .toList();
+
+        if (listaNaoInicializada.size() > 0) {
+            System.out.println("Atenção: variaveis não inicializadas: " + listaNaoInicializada);
+        }
+	}
+
+	public void checaVariaveisNaoUtilizadas() {
+        if(tabelaSimbolos.generateUnusedList().size() > 0) {
+            System.out.println("Atenção: variáveis não usadas: " + tabelaSimbolos.generateUnusedList()
+                                                                                .stream()
+                                                                                .map(x -> x.getName())
+                                                                                .toList());
+        }
+	}
 }
 
 programa	: 'programa' ID { program.setName(_input.LT(-1).getText());
@@ -64,25 +93,30 @@ programa	: 'programa' ID { program.setName(_input.LT(-1).getText());
                'fimprog'
 
                {
-                  program.setSymbolTable(symbolTable);
-                  program.setCommandList(stack.pop());
+                checaListaNaoInicializada();
+                checaVariaveisNaoUtilizadas();
 
+                program.setSymbolTable(tabelaSimbolos);
+                program.setCommandList(stack.pop());
+
+                program.generateTarget();
                }
 			;
 						
-declaravar	: 'declarar' { currentDecl.clear(); } tipoVar  ID  { 
-                        currentDecl.add(new Var(_input.LT(-1).getText()));
-                }
-               ( VIRG ID                
-              		 { currentDecl.add(new Var(_input.LT(-1).getText()));}
-               )*	 
-               { updateType(); } 
+declaravar	: 'declarar' tipoVar  ID  {
+				nomeVar = _input.LT(-1).getText();
+				adicionarSimbolo();
+			} 
+            ( VIRG ID{
+				    nomeVar = _input.LT(-1).getText();
+				    adicionarSimbolo();
+            })*	 
                PV
 			;
 
-tipoVar			: 'inteiro' {currentType = Types.INTEIRO;}
-				| 'real' {currentType = Types.REAL;}
-				| 'texto' {currentType = Types.TEXTO;}
+tipoVar			: 'inteiro' {tipoVar = Variavel.INTEIRO;}
+				| 'real' {tipoVar = Variavel.REAL;}
+				| 'texto' {tipoVar = Variavel.TEXTO;}
 			 	;
 
 comando     :  cmdAttrib
@@ -93,146 +127,162 @@ comando     :  cmdAttrib
             |  cmdRealizeEnquanto
             ;					
 			
-cmdAttrib   : ID { if (!isDeclared(_input.LT(-1).getText())) {
-                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-                   }
-                   symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-                   leftType = symbolTable.get(_input.LT(-1).getText()).getType();
-                 }
-              OP_AT 
+cmdAttrib   : ID {
+                    nomeVar = _input.LT(-1).getText();
+                    nomeVarExprEsquerda = nomeVar;
+                    verificarIdentificador();
+                    variavelAtual = (Variavel) tabelaSimbolos.get(_input.LT(-1).getText());
+                    tipoExprEsquerda = variavelAtual.getType();
+				} 
+              OP_AT {strExpr = "";}
               expr 
-              PV
-              
-              {
-                 System.out.println("Left  Side Expression Type = "+leftType);
-                 System.out.println("Right Side Expression Type = "+rightType);
-                 if (leftType.getValue() < rightType.getValue()){
-                    throw new UFABCSemanticException("Type Mismatchig on Assignment");
-                 }
-              }
+              PV    {
+					    if (tipoExprEsquerda != tipoExprDireita) {
+
+                            throw new SemanticException("Atribuição de tipo incompatível na variável '" + nomeVarExprEsquerda + "'");
+                        }
+
+                        variavelAtual.setInitialized(true);
+
+                        stack.peek().add(new AttributeCommand(nomeVar, strExpr));
+					}
 			;			
 			
 cmdLeitura  : 'leia' AP 
-               ID { if (!isDeclared(_input.LT(-1).getText())) {
-                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-                    }
-                    symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-                  } 
+               ID   {
+						nomeVar = _input.LT(-1).getText();
+						verificarIdentificador();
+						setAsUsed();
+                        Variavel var = (Variavel) tabelaSimbolos.get(nomeVar);
+                        var.setInitialized(true);
+
+					    stack.peek().add(new ReadCommand((Variavel) tabelaSimbolos.get(nomeVar)));
+
+					}
                FP 
                PV 
 			;
 			
-cmdEscrita  : 'escreva' AP 
-              ( termo  { Command cmdWrite = new WriteCommand(_input.LT(-1).getText());
-                         stack.peek().add(cmdWrite);
-                       } 
-              ) 
-              FP PV { rightType = null;}
+cmdEscrita  : 'escreva' AP (
+                TEXTO {
+                    stack.peek().add(new WriteCommand(_input.LT(-1).getText()));
+                }
+				| 
+                ID {
+                    nomeVar = _input.LT(-1).getText();
+                    verificarIdentificador();
+                    checaSeInicializado();
+                    setAsUsed();
+
+                    stack.peek().add(new WriteCommand(nomeVar));
+				})
+                FP 
+                PV
 			;				
 
-cmdSe			:   'se' { stack.push(new ArrayList<Command>());
-                             strExpr = "";
-                             currentIfCommand = new IfCommand();
-                        }  
+cmdSe			:   'se' {
+                            stack.push(new ArrayList<>());
+                            strExpr = "";
+                            comandoSeAtual = new IfCommand();
+                        }
                     AP 
                     expr 
                     OP_REL { strExpr += _input.LT(-1).getText(); }
                     expr 
-                    FP { currentIfCommand.setExpression(strExpr); }
+                    FP { comandoSeAtual.setExpression(strExpr); }
                     'entao' 
                     AC 
-                    (comando)+ {currentIfCommand.setTrueList(stack.pop());}  
-                    FC 
+                    (comando)+   
+                    FC {comandoSeAtual.setTrueList(stack.pop());}
                     ( 'senao'  
-                        { stack.push(new ArrayList<Command>()); }
+                        { stack.push(new ArrayList<>()); }
+                        AC
                         comando+
-                        {
-                        currentIfCommand.setFalseList(stack.pop());
-                        }  
+                        FC
+                        {comandoSeAtual.setFalseList(stack.pop());}  
                     )? 
-                    'fimse' 
                     {
-                        stack.peek().add(currentIfCommand);
+                        stack.peek().add(comandoSeAtual);
                     }  			   
                 ;
 
-cmdEnquanto		: 'enquanto' AP expr OP_REL expr FP
-						AC (comando)+ FC
+cmdEnquanto		: 'enquanto'{
+                        stack.push(new ArrayList<>());
+                        comandoRealizeAtual = new WhileCommand();
+                        strExpr = "";
+                    } AP expr OP_REL {strExpr += _input.LT(-1).getText();} expr FP{comandoRealizeAtual.setExpression(strExpr);}
+						AC (comando)+ FC {
+                        comandoRealizeAtual.setCommandList(stack.pop());
+                        stack.peek().add(comandoRealizeAtual);
+                    }
 				;
 
-cmdRealizeEnquanto  : 'realize' AC (comando)+ FC
-                      'enquanto' AP expr OP_REL expr FP PV
+cmdRealizeEnquanto  : 'realize'{
+                        stack.push(new ArrayList<>());
+                        comandoRealizeEnquantoAtual = new DoWhileCommand();
+                    }  AC (comando)+ FC
+                      'enquanto'{strExpr = "";} AP expr OP_REL{strExpr += _input.LT(-1).getText();} expr FP {comandoRealizeEnquantoAtual.setExpression(strExpr);} 
+                      PV{
+                        comandoRealizeEnquantoAtual.setCommandList(stack.pop());
+                        stack.peek().add(comandoRealizeEnquantoAtual);
+                    }
                     ; 
 
-expr		:  termo  { strExpr += _input.LT(-1).getText(); } exprl 			
+expr		: termo
+                    ((MAIS | MENOS) {
+                        strExpr += _input.LT(-1).getText();
+                    }
+                    termo
+                    )*	
 			;
 			
-termo		: ID  { if (!isDeclared(_input.LT(-1).getText())) {
-                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+termo		: fator {
+                        strExpr += _input.LT(-1).getText();
                     }
-                    if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()){
-                       throw new UFABCSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
+                    ((VEZES | DIV) {
+                        strExpr += _input.LT(-1).getText();
                     }
-                    if (rightType == null){
-                       rightType = symbolTable.get(_input.LT(-1).getText()).getType();
-                       //System.out.println("Encontrei pela 1a vez uma variavel = "+rightType);
+                    fator {
+                        strExpr += _input.LT(-1).getText();
                     }
-                    else{
-                       if (symbolTable.get(_input.LT(-1).getText()).getType().getValue() > rightType.getValue()){
-                          rightType = symbolTable.get(_input.LT(-1).getText()).getType();
-                          //System.out.println("Ja havia tipo declarado e mudou para = "+rightType);
-                          
-                       }
-                    }
-                  }   
-			| NUM    {  
-                    String numText = _input.LT(-1).getText();
-                    if (numText.contains(".")) {  // Verifica se é um número real
-                        if (rightType == null) {
-                            rightType = Types.REAL;
-                            //System.out.println("Encontrei um numero REAL pela 1a vez "+rightType);
-                        } else {
-                            if (rightType.getValue() < Types.REAL.getValue()){			                    
-                                rightType = Types.REAL;
-                                //System.out.println("Mudei o tipo para real = "+rightType);
-                            }
-                        }
-                    } else {  // Se não tiver ponto decimal, é um inteiro
-                        if (rightType == null) {
-                            rightType = Types.INTEIRO;
-                            //System.out.println("Encontrei um numero INTEIRO pela 1a vez "+rightType);
-                        } else {
-                            if (rightType.getValue() < Types.INTEIRO.getValue()){			                    
-                                rightType = Types.INTEIRO;
-                                //System.out.println("Mudei o tipo para Inteiro = "+rightType);
-                            }
-                        }
-                    }
-			         }
-			| TEXTO  {  
-                     String text = _input.LT(-1).getText();
-                     if (rightType == null) {
-			 				rightType = Types.TEXTO;
-			 				//System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
-			            }
-			            else{
-			                if (rightType.getValue() < Types.TEXTO.getValue()){			                    
-			                	rightType = Types.TEXTO;
-			                	//System.out.println("Mudei o tipo para TEXTO = "+rightType);
-			                	
-			                }
-			            }
-                  }  
+                    )*
 			;
-			
-exprl		: ( OP { strExpr += _input.LT(-1).getText(); } 
-                termo { strExpr += _input.LT(-1).getText(); } 
-              ) *
-			;		
-			
-OP			: '+' | '-' | '*' | '/' 
-			;	
-			
+
+fator				: NUM {
+                        String stringNumero = _input.LT(-1).getText();
+                        if (stringNumero.contains(".")) {
+                            tipoExprDireita = Variavel.REAL;
+                        } else {
+                            tipoExprDireita = Variavel.INTEIRO;
+                        }
+                    }
+                    | TEXTO {
+                        tipoExprDireita = Variavel.TEXTO;
+                    }
+					| ID {
+						nomeVar = _input.LT(-1).getText();
+						verificarIdentificador();
+						checaSeInicializado();
+						setAsUsed();
+
+                        Variavel var = (Variavel) tabelaSimbolos.get(_input.LT(-1).getText());
+                        tipoExprDireita = var.getType();
+					}
+					| AP expr FP
+					;
+
+MAIS        : '+'
+            ;
+
+MENOS       : '-'
+            ;
+
+VEZES       : '*'
+            ;
+
+DIV         : '/'
+            ;
+				
 OP_AT	    : '='
 		    ;			
 

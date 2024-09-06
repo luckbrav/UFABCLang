@@ -49,6 +49,11 @@ public class TabelaSimbolos
 		return this.generateList().stream().filter(x -> !x.isInitialized()).toList();
 	}
 	
+	public List<Variavel> generateUnusedList()
+	{
+		return this.generateList().stream().filter(x -> !x.isUsed()).toList();
+	}
+
 	public boolean exists(String symbolName)
 	{
 		return this.symbolsMap.containsKey(symbolName);

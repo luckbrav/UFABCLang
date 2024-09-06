@@ -2,7 +2,7 @@ package io.compiler.core.ast;
 
 import java.util.List;
 
-public class IfCommand extends Command{
+public class IfCommand implements Command{
 
     private String expression;
     private List<Command> trueList;
@@ -53,18 +53,18 @@ public class IfCommand extends Command{
 
 
     @Override
-    public String generateTarget() {
+    public String generateJavaCode() {
         StringBuilder str = new StringBuilder();
         str.append("if (" +expression+") {");
         for (Command command : trueList) {
-            str.append(command.generateTarget());
+            str.append(command.generateJavaCode());
         }
         str.append("}");
 
         if (!falseList.isEmpty()){
             str.append("else {");
             for (Command command : falseList) {
-                str.append(command.generateTarget());
+                str.append(command.generateJavaCode());
             }
             str.append("}");
         }

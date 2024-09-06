@@ -5,7 +5,6 @@ programa meuPrograma
 		a = 0;
 		b = 2;
 		x = "ola";
-		y = "tchau";
 		escreva("Hello World");
 		escreva("Fim do programa");
 		leia(a);
@@ -13,15 +12,22 @@ programa meuPrograma
 		escreva(a);
 		se (a > 5) entao {
 			escreva("maior que 5");
+			a = a + 1
 		} senao {
 		    escreva("menor que 5");
-		} fimse
-		
+		}
+		realize {
+			b = b + 1
+		} enquanto (a < 5);
+
+		enquanto (a < 10){
+			b = b + 1
+		}
 		escreva("oi agora vamos testar outro");
 		se (b >= 0) entao {
 		   escreva("b positivo");
 		} senao {
 		   escreva("b negativo");
-		} fimse
+		}
 	fim
 fimprog

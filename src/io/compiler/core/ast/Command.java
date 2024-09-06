@@ -1,5 +1,6 @@
 package io.compiler.core.ast;
 
-public abstract class Command {
-    public abstract String generateTarget(); 
+public interface Command
+{
+    String generateJavaCode();
 }

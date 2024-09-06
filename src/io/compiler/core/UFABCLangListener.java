@@ -1,17 +1,17 @@
 // Generated from UFABCLang.g4 by ANTLR 4.13.2
 package io.compiler.core;
 
-    // import io.compiler.estruturas.*;
-	// import io.compiler.types.*;
-	// import io.compiler.core.exceptions.*;
-    // import io.compiler.core.ast.*;
+    import io.compiler.estruturas.*;
+	import io.compiler.types.*;
+	import io.compiler.core.exceptions.*;
+    import io.compiler.core.ast.*;
 
-	// import java.util.ArrayList;
-	// import java.util.List;
-    // import java.util.Stack;
-	// import java.util.HashMap;
-	// import java.util.HashSet;
-	// import java.util.Set;
+	import java.util.ArrayList;
+	import java.util.List;
+    import java.util.Stack;
+	import java.util.HashMap;
+	import java.util.HashSet;
+	import java.util.Set;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -141,13 +141,13 @@ public interface UFABCLangListener extends ParseTreeListener {
 	 */
 	void exitTermo(UFABCLangParser.TermoContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link UFABCLangParser#exprl}.
+	 * Enter a parse tree produced by {@link UFABCLangParser#fator}.
 	 * @param ctx the parse tree
 	 */
-	void enterExprl(UFABCLangParser.ExprlContext ctx);
+	void enterFator(UFABCLangParser.FatorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link UFABCLangParser#exprl}.
+	 * Exit a parse tree produced by {@link UFABCLangParser#fator}.
 	 * @param ctx the parse tree
 	 */
-	void exitExprl(UFABCLangParser.ExprlContext ctx);
+	void exitFator(UFABCLangParser.FatorContext ctx);
 }
