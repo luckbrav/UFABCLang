@@ -1,12 +1,17 @@
 // Generated from UFABCLang.g4 by ANTLR 4.13.2
 package io.compiler.core;
 
-	import java.util.ArrayList;
-    import java.util.Stack;
-	import java.util.HashMap;
+    import io.compiler.estruturas.*;
 	import io.compiler.types.*;
 	import io.compiler.core.exceptions.*;
     import io.compiler.core.ast.*;
+
+	import java.util.ArrayList;
+	import java.util.List;
+    import java.util.Stack;
+	import java.util.HashMap;
+	import java.util.HashSet;
+	import java.util.Set;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -107,15 +112,23 @@ public class UFABCLangParser extends Parser {
 
 
 	    private HashMap<String,Var> symbolTable = new HashMap<String, Var>();
+
 	    private ArrayList<Var> currentDecl = new ArrayList<Var>();
+
 	    private Types currentType;
+
 	    private Types leftType=null, rightType=null;
-	    private Program program = new Program();
+
 	    private String strExpr = "";
+
 	    private IfCommand currentIfCommand;
+	    private DoWhileCommand currentDoWhileCommand;
+	    private WhileCommand currentWhileCommand;
 
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
+	    private Program program = new Program();
+
 	    public void updateType(){
 	    	for(Var v: currentDecl){
 	    	   v.setType(currentType);
@@ -221,6 +234,7 @@ public class UFABCLangParser extends Parser {
 
 			                  program.setSymbolTable(symbolTable);
 			                  program.setCommandList(stack.pop());
+
 			               
 			}
 		}
@@ -277,7 +291,9 @@ public class UFABCLangParser extends Parser {
 			tipoVar();
 			setState(47);
 			match(ID);
-			 currentDecl.add(new Var(_input.LT(-1).getText()));
+			 
+			                        currentDecl.add(new Var(_input.LT(-1).getText()));
+			                
 			setState(54);
 			_errHandler.sync(this);
 			_la = _input.LA(1);

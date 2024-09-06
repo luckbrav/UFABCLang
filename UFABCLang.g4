@@ -1,25 +1,38 @@
 grammar UFABCLang;
 
 @header {
-	import java.util.ArrayList;
-    import java.util.Stack;
-	import java.util.HashMap;
+    import io.compiler.estruturas.*;
 	import io.compiler.types.*;
 	import io.compiler.core.exceptions.*;
     import io.compiler.core.ast.*;
+
+	import java.util.ArrayList;
+	import java.util.List;
+    import java.util.Stack;
+	import java.util.HashMap;
+	import java.util.HashSet;
+	import java.util.Set;
 }
 
 @members {
     private HashMap<String,Var> symbolTable = new HashMap<String, Var>();
+
     private ArrayList<Var> currentDecl = new ArrayList<Var>();
+
     private Types currentType;
+
     private Types leftType=null, rightType=null;
-    private Program program = new Program();
+
     private String strExpr = "";
+
     private IfCommand currentIfCommand;
+    private DoWhileCommand currentDoWhileCommand;
+    private WhileCommand currentWhileCommand;
 
     private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
     
+    private Program program = new Program();
+
     public void updateType(){
     	for(Var v: currentDecl){
     	   v.setType(currentType);
@@ -53,12 +66,13 @@ programa	: 'programa' ID { program.setName(_input.LT(-1).getText());
                {
                   program.setSymbolTable(symbolTable);
                   program.setCommandList(stack.pop());
+
                }
 			;
 						
-declaravar	: 'declarar' { currentDecl.clear(); } tipoVar  
-
-               ID  { currentDecl.add(new Var(_input.LT(-1).getText()));}
+declaravar	: 'declarar' { currentDecl.clear(); } tipoVar  ID  { 
+                        currentDecl.add(new Var(_input.LT(-1).getText()));
+                }
                ( VIRG ID                
               		 { currentDecl.add(new Var(_input.LT(-1).getText()));}
                )*	 

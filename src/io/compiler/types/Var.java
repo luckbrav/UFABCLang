@@ -35,6 +35,9 @@ public class Var {
 	public void setInitialized(boolean initialized) {
 		this.initialized = initialized;
 	}
+
+
+	
 	@Override
 	public String toString() {
 		return "Var [id=" + id + ", type=" + type + ", initialized=" + initialized + "]";

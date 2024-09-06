@@ -54,7 +54,6 @@ public class IfCommand extends Command{
 
     @Override
     public String generateTarget() {
-        // TODO Auto-generated method stub
         StringBuilder str = new StringBuilder();
         str.append("if (" +expression+") {");
         for (Command command : trueList) {

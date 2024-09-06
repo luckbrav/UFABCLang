@@ -1,24 +1,27 @@
 programa meuPrograma
-
-	declarar inteiro g;
-	declarar real x,y;
+	declarar inteiro a,b;
+	declarar texto x,y;
 	inicio
+		a = 0;
+		b = 2;
+		x = "ola";
+		y = "tchau";
 		escreva("Hello World");
+		escreva("Fim do programa");
 		leia(a);
 		leia(b);
 		escreva(a);
-		se (a > 5) entao
-			escreva("a maior que 5");
-		senao
-		    escreva("a menor que 5");
-		fimse
+		se (a > 5) entao {
+			escreva("maior que 5");
+		} senao {
+		    escreva("menor que 5");
+		} fimse
 		
-		escreva("agora vamos testar outro! ");
-		se (b >= 0) entao
+		escreva("oi agora vamos testar outro");
+		se (b >= 0) entao {
 		   escreva("b positivo");
-		senao
+		} senao {
 		   escreva("b negativo");
-		fimse
-  		escreva("Fim do programa");
+		} fimse
 	fim
 fimprog

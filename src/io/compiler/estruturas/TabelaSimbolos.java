@@ -11,6 +11,14 @@ public class TabelaSimbolos
 {
 	private Map<String, Simbolo> symbolsMap = new HashMap<>();
 
+	public TabelaSimbolos() {
+		super();
+	}
+
+	public TabelaSimbolos(Map<String, Simbolo> symbolsMap) {
+		this.symbolsMap = symbolsMap;
+	}
+
 	public void add(Simbolo symbol) 
 	{
 		this.symbolsMap.put(symbol.getName(), symbol);
@@ -44,6 +52,14 @@ public class TabelaSimbolos
 	public boolean exists(String symbolName)
 	{
 		return this.symbolsMap.containsKey(symbolName);
+	}
+
+	public Map<String, Simbolo> getSymbolsMap() {
+		return symbolsMap;
+	}
+
+	public void setSymbolsMap(Map<String, Simbolo> symbolsMap) {
+		this.symbolsMap = symbolsMap;
 	}
 
 

@@ -37,16 +37,15 @@ public class MainClass {
 
 			Program program = parser.getProgram();
 
-			System.out.println(program.generateTarget());
+			System.out.println(program.generateJavaFile());
 
 			try {
 				File f = new File (program.getName()+".java");
 				FileWriter fr = new FileWriter(f);
 				PrintWriter pr = new PrintWriter(fr);
-				pr.println(program.generateTarget());
+				pr.println(program.generateJavaFile());
 				pr.close();
 			} catch (IOException e) {
-				// TODO: handle exception
 				e.printStackTrace();
 			}
 
