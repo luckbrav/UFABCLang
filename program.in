@@ -8,23 +8,25 @@ programa meuPrograma
 		y = "tchau";
 		escreva(x);
 		escreva(y);
+		escreva(a);
+		escreva(b);
 		leia(a);
 		leia(b);
-		escreva(a);
 		se (a > 5) entao {
-			escreva("maior que 5");
-			a = a + 1
+			escreva("a maior que 5");
 		} senao {
-		    escreva("menor que 5");
+		    escreva("a menor que 5");
 		}
 		realize {
-			b = b + 1
+			a = a + 1
 		} enquanto (a < 5);
 
 		enquanto (a < 10){
-			b = b + 1
+			a = a + 1
 		}
+
 		escreva("oi agora vamos testar outro");
+
 		se (b >= 0) entao {
 		   escreva("b positivo");
 		} senao {

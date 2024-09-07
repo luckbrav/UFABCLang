@@ -1,7 +1,6 @@
 // Generated from c:/Users/T-GAMER/OneDrive/Área de Trabalho/UFABCLang/UFABCLang.g4 by ANTLR 4.13.1
 
     import io.compiler.estruturas.*;
-	import io.compiler.types.*;
 	import io.compiler.core.exceptions.*;
     import io.compiler.core.ast.*;
 
@@ -200,6 +199,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_programa; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterPrograma(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitPrograma(this);
+		}
 	}
 
 	public final ProgramaContext programa() throws RecognitionException {
@@ -290,6 +297,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_declaravar; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterDeclaravar(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitDeclaravar(this);
+		}
 	}
 
 	public final DeclaravarContext declaravar() throws RecognitionException {
@@ -350,6 +365,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_tipoVar; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterTipoVar(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitTipoVar(this);
+		}
 	}
 
 	public final TipoVarContext tipoVar() throws RecognitionException {
@@ -422,6 +445,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_comando; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterComando(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitComando(this);
+		}
 	}
 
 	public final ComandoContext comando() throws RecognitionException {
@@ -500,6 +531,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_cmdAttrib; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterCmdAttrib(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitCmdAttrib(this);
+		}
 	}
 
 	public final CmdAttribContext cmdAttrib() throws RecognitionException {
@@ -557,6 +596,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_cmdLeitura; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterCmdLeitura(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitCmdLeitura(this);
+		}
 	}
 
 	public final CmdLeituraContext cmdLeitura() throws RecognitionException {
@@ -609,6 +656,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_cmdEscrita; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterCmdEscrita(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitCmdEscrita(this);
+		}
 	}
 
 	public final CmdEscritaContext cmdEscrita() throws RecognitionException {
@@ -696,6 +751,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_cmdSe; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterCmdSe(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitCmdSe(this);
+		}
 	}
 
 	public final CmdSeContext cmdSe() throws RecognitionException {
@@ -814,6 +877,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_cmdEnquanto; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterCmdEnquanto(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitCmdEnquanto(this);
+		}
 	}
 
 	public final CmdEnquantoContext cmdEnquanto() throws RecognitionException {
@@ -901,6 +972,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_cmdRealizeEnquanto; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterCmdRealizeEnquanto(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitCmdRealizeEnquanto(this);
+		}
 	}
 
 	public final CmdRealizeEnquantoContext cmdRealizeEnquanto() throws RecognitionException {
@@ -988,6 +1067,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitExpr(this);
+		}
 	}
 
 	public final ExprContext expr() throws RecognitionException {
@@ -1059,6 +1146,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_termo; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterTermo(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitTermo(this);
+		}
 	}
 
 	public final TermoContext termo() throws RecognitionException {
@@ -1130,6 +1225,14 @@ public class UFABCLangParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_fator; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).enterFator(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof UFABCLangListener ) ((UFABCLangListener)listener).exitFator(this);
+		}
 	}
 
 	public final FatorContext fator() throws RecognitionException {

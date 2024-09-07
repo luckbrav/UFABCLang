@@ -1,7 +1,6 @@
 // Generated from c:/Users/T-GAMER/OneDrive/Área de Trabalho/UFABCLang/UFABCLang.g4 by ANTLR 4.13.1
 
     import io.compiler.estruturas.*;
-	import io.compiler.types.*;
 	import io.compiler.core.exceptions.*;
     import io.compiler.core.ast.*;
 

@@ -1,5 +1,4 @@
-// Generated from UFABCLang.g4 by ANTLR 4.13.2
-package io.compiler.core;
+// Generated from c:/Users/T-GAMER/OneDrive/�rea de Trabalho/UFABCLang/UFABCLang.g4 by ANTLR 4.13.1
 
     // import io.compiler.estruturas.*;
 	// import io.compiler.core.exceptions.*;

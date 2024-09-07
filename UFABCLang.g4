@@ -2,7 +2,6 @@ grammar UFABCLang;
 
 @header {
     import io.compiler.estruturas.*;
-	import io.compiler.types.*;
 	import io.compiler.core.exceptions.*;
     import io.compiler.core.ast.*;
 
